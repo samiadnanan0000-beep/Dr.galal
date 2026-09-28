@@ -135,7 +135,7 @@
   <div class="fixed -bottom-40 right-1/3 w-[500px] h-[500px] bg-gradient-to-t from-[#D1FAE5]/50 dark:from-[#064e3b]/20 to-transparent rounded-full blur-[150px] pointer-events-none opacity-50 dark:opacity-30"></div>
 
   <!-- الشريط العلوي بنمط Dynamic Floating Island -->
-  <header class="sticky top-5 z-50 px-4 max-w-5xl mx-auto">
+  <header class="sticky top-5 z-40 px-4 max-w-5xl mx-auto">
     <nav class="apple-glass rounded-full px-3 sm:px-6 py-2.5 flex justify-between items-center transition-all duration-300 gap-2">
       
       <!-- هوية الطبيب -->
@@ -225,9 +225,9 @@
           <i class="fa-solid fa-calendar-check text-sm"></i>
           <span>طلب استشارة الآن</span>
         </a>
-        <button onclick="switchTab('resume')" class="apple-glass-card hover:bg-white/80 dark:hover:bg-white/10 text-[#1D1D1F] dark:text-white font-semibold text-sm sm:text-base py-3.5 px-6 rounded-full transition-all flex items-center gap-2 active:scale-95 cursor-pointer">
-          <i class="fa-solid fa-user-tie text-[#0071E3] dark:text-[#38BDF8] text-base"></i>
-          <span>الاطلاع على السيرة الذاتية</span>
+        <button onclick="toggleChatbot()" class="apple-glass-card hover:bg-white/80 dark:hover:bg-white/10 text-[#0071E3] dark:text-[#38BDF8] font-semibold text-sm sm:text-base py-3.5 px-6 rounded-full transition-all flex items-center gap-2 active:scale-95 cursor-pointer">
+          <i class="fa-solid fa-robot text-base"></i>
+          <span>استشر المساعد الذكي فوراً</span>
         </button>
       </div>
     </section>
@@ -566,7 +566,7 @@
   </section>
 
   <!-- التذييل وإخلاء المسؤولية -->
-  <footer class="max-w-3xl mx-auto px-4 pb-16 text-center text-xs text-[#86868B] dark:text-[#A1A1A6] relative z-10">
+  <footer class="max-w-3xl mx-auto px-4 pb-28 text-center text-xs text-[#86868B] dark:text-[#A1A1A6] relative z-10">
     <div class="apple-glass-card p-4 rounded-2xl mb-6">
       <p class="leading-relaxed text-[11px] text-[#555] dark:text-gray-300">
         <i class="fa-solid fa-circle-info text-[#0071E3] dark:text-[#38BDF8] ml-1"></i>
@@ -586,18 +586,87 @@
     </div>
   </footer>
 
-  <!-- زر واتساب العائم -->
+  <!-- زر واتساب العائم (جهة اليسار) -->
   <a href="https://wa.me/967783817001?text=%D9%85%D8%B1%D8%AD%D8%A8%D8%A7%D9%8B%20%D8%AF%D9%83%D8%AA%D9%88%D8%B1%20%D8%AC%D9%84%D8%A7%D9%84%D8%8C%20%D8%A3%D9%88%D8%AF%20%D8%A7%D9%84%D8%A7%D8%B3%D8%AA%D9%81%D8%B3%D8%A7%D8%B1%20%D8%B9%D9%86%20%D8%A7%D8%B3%D8%AA%D8%B4%D8%A7%D8%B1%D8%A9%20%D8%B7%D8%A8%D9%8A%D8%A9" target="_blank" 
      aria-label="محادثة واتساب"
-     class="fixed bottom-6 left-6 z-50 w-13 h-13 p-3.5 rounded-full bg-[#34C759] text-white flex items-center justify-center shadow-lg shadow-black/15 hover:scale-105 active:scale-95 transition-all duration-200">
+     class="fixed bottom-6 left-6 z-40 w-13 h-13 p-3.5 rounded-full bg-[#34C759] text-white flex items-center justify-center shadow-lg shadow-black/15 hover:scale-105 active:scale-95 transition-all duration-200">
     <i class="fa-brands fa-whatsapp text-2xl"></i>
   </a>
 
-  <!-- المنطق البرمجي لإدارة الوضع الليلي، والتبويبات، والنموذج -->
+  <!-- ======================= 3) المساعد الطبي الآلي الذكي (Chatbot Widget) ======================= -->
+  
+  <!-- زر فتح شات المساعد الذكي (جهة اليمين) -->
+  <button id="chatbotToggleBtn" onclick="toggleChatbot()" 
+    class="fixed bottom-6 right-6 z-40 w-14 h-14 rounded-full apple-btn-primary text-white flex items-center justify-center shadow-2xl shadow-blue-500/30 hover:scale-105 active:scale-95 transition-all duration-200 cursor-pointer"
+    aria-label="المساعد الطبي الذكي">
+    <i id="chatbotIcon" class="fa-solid fa-comment-medical text-2xl"></i>
+  </button>
+
+  <!-- نافذة المحادثة الزجاجية المتوافقة مع أسلوب Apple -->
+  <div id="chatbotBox" class="fixed bottom-24 right-4 sm:right-6 z-50 w-[92vw] sm:w-[390px] h-[520px] max-h-[80vh] apple-glass rounded-[2rem] shadow-2xl flex flex-col overflow-hidden hidden transition-all duration-300 border border-white/80 dark:border-white/10">
+    
+    <!-- شريط رأس الشات -->
+    <div class="px-5 py-3.5 bg-white/50 dark:bg-white/5 border-b border-black/5 dark:border-white/10 flex items-center justify-between">
+      <div class="flex items-center gap-2.5">
+        <div class="w-9 h-9 rounded-full bg-gradient-to-tr from-[#0071E3] to-[#0D9488] text-white flex items-center justify-center text-sm shadow-md">
+          <i class="fa-solid fa-user-doctor"></i>
+        </div>
+        <div>
+          <h4 class="text-xs sm:text-sm font-bold text-[#1D1D1F] dark:text-white">المساعد الطبي الآلي</h4>
+          <span class="text-[10px] text-emerald-600 dark:text-emerald-400 font-semibold flex items-center gap-1">
+            <span class="w-1.5 h-1.5 rounded-full bg-[#34C759] shadow-[0_0_6px_#34C759]"></span> إرشادات معتمدة ومباشرة
+          </span>
+        </div>
+      </div>
+      <button onclick="toggleChatbot()" class="w-8 h-8 rounded-full bg-black/5 dark:bg-white/10 hover:bg-black/10 dark:hover:bg-white/20 text-[#86868B] dark:text-gray-300 flex items-center justify-center transition cursor-pointer">
+        <i class="fa-solid fa-xmark text-sm"></i>
+      </button>
+    </div>
+
+    <!-- مساحة الرسائل التفاعلية -->
+    <div id="chatMessages" class="flex-1 p-4 overflow-y-auto space-y-3 text-xs leading-relaxed">
+      <div class="flex gap-2 items-start">
+        <div class="w-6 h-6 rounded-full bg-[#0071E3] text-white flex items-center justify-center text-[10px] shrink-0 mt-0.5">
+          <i class="fa-solid fa-stethoscope"></i>
+        </div>
+        <div class="apple-glass-card p-3.5 rounded-2xl rounded-tr-none text-[#1D1D1F] dark:text-gray-100 max-w-[85%] shadow-sm">
+          أهلاً بك! أنا المساعد الاستشاري الآلي الخاص بالعيادة الرقمية لـ <strong>د. جلال حسان</strong>. اختر سؤالاً سريعاً أو اكتب استفسارك للإجابة فوراً:
+        </div>
+      </div>
+
+      <!-- أزرار الأسئلة الشائعة الجاهزة -->
+      <div id="quickQuestions" class="flex flex-wrap gap-1.5 pt-1 pr-7">
+        <button onclick="askBot('حالة طارئة')" class="bg-red-500/10 hover:bg-red-500/20 text-red-600 dark:text-red-400 px-3 py-1.5 rounded-full font-semibold transition cursor-pointer flex items-center gap-1">
+          <i class="fa-solid fa-bolt text-[10px]"></i> <span>حالة طارئة وعاجلة</span>
+        </button>
+        <button onclick="askBot('متابعة الضغط والسكري')" class="bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-700 dark:text-emerald-400 px-3 py-1.5 rounded-full font-semibold transition cursor-pointer flex items-center gap-1">
+          <i class="fa-solid fa-heart-pulse text-[10px]"></i> <span>الضغط والسكري</span>
+        </button>
+        <button onclick="askBot('قراءة التحاليل والتقارير')" class="bg-[#0071E3]/10 hover:bg-[#0071E3]/20 text-[#0071E3] dark:text-[#38BDF8] px-3 py-1.5 rounded-full font-semibold transition cursor-pointer flex items-center gap-1">
+          <i class="fa-solid fa-file-medical text-[10px]"></i> <span>قراءة الفحوصات</span>
+        </button>
+        <button onclick="askBot('كيفية حجز موعد')" class="bg-purple-500/10 hover:bg-purple-500/20 text-purple-700 dark:text-purple-300 px-3 py-1.5 rounded-full font-semibold transition cursor-pointer flex items-center gap-1">
+          <i class="fa-solid fa-calendar-check text-[10px]"></i> <span>حجز استشارة</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- صندوق الإدخال والإرسال -->
+    <form onsubmit="handleChatSubmit(event)" class="p-3 bg-white/40 dark:bg-white/5 border-t border-black/5 dark:border-white/10 flex items-center gap-2">
+      <input type="text" id="chatInput" placeholder="اكتب سؤالك أو الأعراض هنا..." 
+        class="flex-1 bg-white/70 dark:bg-white/10 outline-none text-[#1D1D1F] dark:text-white px-3.5 py-2.5 rounded-xl text-xs border border-black/5 dark:border-white/10 placeholder-[#86868B]">
+      <button type="submit" class="w-9 h-9 rounded-xl apple-btn-primary text-white flex items-center justify-center shrink-0 cursor-pointer shadow-sm hover:opacity-95 transition">
+        <i class="fa-solid fa-paper-plane text-xs"></i>
+      </button>
+    </form>
+
+  </div>
+
+  <!-- ======================= المنطق البرمجي لكامل النظام ======================= -->
   <script>
     const DOCTOR_PHONE = "967783817001";
 
-    // إدارة الوضع الليلي/النهاري مع حفظ التفضيل وتحديث الأيقونة
+    // 1. إدارة المظهر (Dark / Light Mode)
     function updateThemeIcon() {
       const isDark = document.documentElement.classList.contains('dark');
       const icon = document.getElementById('themeIcon');
@@ -614,12 +683,11 @@
       updateThemeIcon();
     }
 
-    // تهيئة حالة أيقونة الثيم عند اكتمال تحميل الصفحة
     window.addEventListener('DOMContentLoaded', () => {
       updateThemeIcon();
     });
 
-    // التبديل بين التبويبين (الرئيسية vs السيرة الذاتية)
+    // 2. التبديل بين التبويبات (الرئيسية vs السيرة الذاتية)
     function switchTab(tab) {
       const homeView = document.getElementById('homeView');
       const resumeView = document.getElementById('resumeView');
@@ -648,7 +716,7 @@
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    // الانتقال المباشر لحجز الموعد من أي مكان
+    // الانتقال المباشر لحجز الموعد
     function goToBooking() {
       switchTab('home');
       setTimeout(() => {
@@ -659,7 +727,7 @@
       }, 100);
     }
 
-    // فتح وإغلاق القائمة المنسدلة داخلياً
+    // 3. القائمة المنسدلة للخدمات
     function toggleDropdown() {
       const dropdown = document.getElementById('inlineDropdown');
       const arrow = document.getElementById('dropdownArrow');
@@ -667,7 +735,6 @@
       arrow.classList.toggle('rotate-180');
     }
 
-    // اختيار الخدمة وتحديث الحقل والنص
     function selectService(serviceName) {
       document.getElementById('serviceType').value = serviceName;
       const label = document.getElementById('selectedServiceText');
@@ -691,7 +758,7 @@
       toggleDropdown();
     }
 
-    // تجميع البيانات وتجهيز الرابط إلى واتساب
+    // 4. إرسال النموذج إلى واتساب
     function sendToWhatsApp(event) {
       event.preventDefault();
 
@@ -725,6 +792,110 @@ ${notes}`;
 
       const encodedUrl = `https://wa.me/${DOCTOR_PHONE}?text=${encodeURIComponent(formattedMessage)}`;
       window.open(encodedUrl, '_blank');
+    }
+
+    // ======================= منطق وقاعدة بيانات المساعد الآلي (Chatbot) =======================
+    const medicalFAQ = [
+      {
+        keywords: ["طوارئ", "طارئة", "حادث", "نزيف", "اغماء", "ألم شديد", "صدر", "تنفس"],
+        response: "🚨 <strong>توجيه الحالات الطارئة:</strong> في حال وجود ألم حاد بالصدر، أو ضيق شديد في التنفس، أو فقدان للوعي، يجب التوجه فوراً لأقرب قسم طوارئ. للحصول على إرشاد أولي عاجل، اتصل فوراً بالدكتور جلال على: <br><a href='tel:+967783817001' class='text-[#0071E3] dark:text-[#38BDF8] font-bold underline dir-ltr inline-block mt-1'>+967 783 817 001</a>"
+      },
+      {
+        keywords: ["ضغط", "سكر", "سكري", "مزمن", "مزمنة", "جرعة", "ضغط الدم"],
+        response: "🩺 <strong>الأمراض المزمنة:</strong> يُنصح بتسجيل قراءات الضغط أو السكر اليومية (صباحاً ومساءً)، وتجنب تغيير جرعات الأدوية دون استشارة الطبيب. يمكنك تعبئة نموذج الاستشارة وإرفاق قراءاتك لمراجعتها."
+      },
+      {
+        keywords: ["تحليل", "فحص", "أشعة", "تقرير", "فحوصات", "مختبر", "سونار"],
+        response: "📄 <strong>قراءة التقارير والفحوصات:</strong> يمكنك كتابة تفاصيل نتائج التحاليل والأشعة في خانة الملاحظات بنموذج طلب الاستشارة بالصفحة، ثم إرسال الصور مباشرة لشات واتساب الدكتور لتفسيرها بدقة."
+      },
+      {
+        keywords: ["حجز", "موعد", "استشارة", "طلب", "كيف احجز"],
+        response: "📅 <strong>حجز موعد:</strong> يمكنك النزول لقسم 'طلب الاستشارة' وتعبئة بياناتك، وسيتم تحويلك فوراً وبضغطة زر إلى شات واتساب د. جلال حسان."
+      },
+      {
+        keywords: ["أطفال", "طفل", "حرارة", "سخونة", "ترجيع", "استفراغ"],
+        response: "👶 <strong>صحة الأطفال:</strong> عند ارتفاع الحرارة، استخدم كمادات ماء فاتر وسوائل كافية، ولا تُعطِ الأسبرين إطلاقاً للأطفال. يُفضل التواصل مع الطبيب لتحديد خافض الحرارة والجرعة المناسبة حسب وزن الطفل."
+      },
+      {
+        keywords: ["من هو", "سيرة", "خبرة", "معلومات", "الدكتور", "جلال"],
+        response: "👨‍⚕️ <strong>د. جلال حسان:</strong> طبيب عام وجراحة (باطنية وأطفال)، بخبرة سريرية لأكثر من 4 سنوات في التعامل مع الحالات الحرجة وطب الطوارئ والعناية المركزة. يمكنك تفقد تبويب 'السيرة الذاتية' أعلى الصفحة."
+      }
+    ];
+
+    function toggleChatbot() {
+      const box = document.getElementById('chatbotBox');
+      const icon = document.getElementById('chatbotIcon');
+      box.classList.toggle('hidden');
+      
+      if (box.classList.contains('hidden')) {
+        icon.className = 'fa-solid fa-comment-medical text-2xl';
+      } else {
+        icon.className = 'fa-solid fa-chevron-down text-xl';
+        setTimeout(() => document.getElementById('chatInput').focus(), 150);
+      }
+    }
+
+    function askBot(question) {
+      addChatMessage(question, 'user');
+      handleBotAnswer(question);
+    }
+
+    function handleChatSubmit(e) {
+      e.preventDefault();
+      const input = document.getElementById('chatInput');
+      const query = input.value.trim();
+      if (!query) return;
+
+      addChatMessage(query, 'user');
+      input.value = '';
+      handleBotAnswer(query);
+    }
+
+    function addChatMessage(text, sender) {
+      const msgArea = document.getElementById('chatMessages');
+      const wrapper = document.createElement('div');
+      wrapper.className = sender === 'user' ? 'flex justify-end' : 'flex gap-2 items-start';
+
+      if (sender === 'user') {
+        wrapper.innerHTML = `
+          <div class="apple-btn-primary text-white p-3 rounded-2xl rounded-tl-none max-w-[85%] shadow-sm font-medium">
+            ${text}
+          </div>
+        `;
+      } else {
+        wrapper.innerHTML = `
+          <div class="w-6 h-6 rounded-full bg-[#0071E3] text-white flex items-center justify-center text-[10px] shrink-0 mt-0.5">
+            <i class="fa-solid fa-stethoscope"></i>
+          </div>
+          <div class="apple-glass-card p-3 rounded-2xl rounded-tr-none text-[#1D1D1F] dark:text-gray-100 max-w-[85%] shadow-sm">
+            ${text}
+          </div>
+        `;
+      }
+
+      msgArea.appendChild(wrapper);
+      msgArea.scrollTop = msgArea.scrollHeight;
+    }
+
+    function handleBotAnswer(query) {
+      const lower = query.toLowerCase();
+      const matched = medicalFAQ.find(item => 
+        item.keywords.some(kw => lower.includes(kw))
+      );
+
+      setTimeout(() => {
+        if (matched) {
+          addChatMessage(matched.response, 'bot');
+        } else {
+          addChatMessage(
+            `شكراً لسؤالك. للحصول على تشخيص دقيق ومباشر من د. جلال حسان حول "${query}"، يرجى مراسلته مباشرة عبر واتساب: <br><br>
+            <a href="https://wa.me/${DOCTOR_PHONE}?text=${encodeURIComponent('مرحباً دكتور جلال، أود الاستفسار عن: ' + query)}" target="_blank" class="inline-flex items-center gap-1.5 text-emerald-600 dark:text-emerald-400 font-bold underline">
+              <i class="fa-brands fa-whatsapp text-sm"></i> اضغط هنا لمراسلة الدكتور بالاستفسار
+            </a>`,
+            'bot'
+          );
+        }
+      }, 350);
     }
   </script>
 
