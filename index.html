@@ -311,14 +311,6 @@
               class="w-full bg-transparent outline-none text-[#1D1D1F] dark:text-white font-medium text-sm placeholder-[#86868B]/40">
           </div>
 
-          <div class="apple-input-cell rounded-2xl p-3.5 px-4">
-            <label class="block text-[11px] font-bold text-[#86868B] dark:text-[#A1A1A6] mb-1" for="patientPhone">
-              رقم الهاتف
-            </label>
-            <input type="tel" id="patientPhone" required placeholder="770000000" dir="ltr"
-              class="w-full bg-transparent outline-none text-[#1D1D1F] dark:text-white font-mono text-sm placeholder-[#86868B]/40 text-right">
-          </div>
-
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div class="apple-input-cell rounded-2xl p-3.5 px-4">
               <label class="block text-[11px] font-bold text-[#86868B] dark:text-[#A1A1A6] mb-1" for="patientAge">
@@ -530,15 +522,7 @@
       </p>
     </div>
     
-    <p class="font-medium mb-3 text-[11px]">© جميع الحقوق محفوظة — د. جلال حسان</p>
-
-    <div class="inline-flex items-center gap-2 apple-glass-card px-4 py-2 rounded-full text-[11px] font-medium text-[#555] dark:text-gray-300">
-      <i class="fa-solid fa-code text-[#0071E3] dark:text-[#38BDF8]"></i>
-      <span>تصميم وتطوير / سامي عدنان البكري :</span>
-      <a href="tel:+967771051177" dir="ltr" class="text-[#0071E3] dark:text-[#38BDF8] font-mono font-bold hover:underline">
-        771051177
-      </a>
-    </div>
+    <p class="font-medium text-[11px]">© جميع الحقوق محفوظة — د. جلال حسان</p>
   </footer>
 
   <!-- زر واتساب العائم -->
@@ -612,7 +596,7 @@
   <script>
     const DOCTOR_PHONE = "967783817001";
     
-    // تم إدراج مفتاح API الخاص بك هنا
+    // مفتاح API
     const GEMINI_API_KEY = "AQ.Ab8RN6K87h63kc_AmV6e7qLndUOJCVWGHhhNVwNC0khfpxfUxg";
 
     // التوجيه السريري الصارم للذكاء الاصطناعي
@@ -715,7 +699,6 @@
       }
 
       const name = document.getElementById('patientName').value.trim();
-      const phone = document.getElementById('patientPhone').value.trim();
       const age = document.getElementById('patientAge').value.trim();
       const gender = document.getElementById('patientGender').value;
       const notes = document.getElementById('patientNotes').value.trim();
@@ -724,7 +707,6 @@
 `*طلب استشارة طبية (د. جلال حسان)*
 
 👤 *الاسم:* ${name}
-📞 *رقم التواصل:* ${phone}
 🎂 *العمر:* ${age} سنة
 🚻 *الجنس:* ${gender}
 🩺 *الخدمة:* ${service}
